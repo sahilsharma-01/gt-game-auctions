@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Auction Game - Understand Auction Types</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; padding: 20px; color: #2c3e50; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    header img { height: 60px; }
+    header .developer { font-size: 12px; color: #7f8c8d; }
+    h1 { color: #34495e; margin: 10px 0; font-size: 26px; text-align: center; }
+    h3 { color: #2c3e50; font-size: 20px; margin-top: 20px; }
+    .auction-type { background: #ffffff; padding: 20px; border-radius: 16px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); margin: 25px auto; max-width: 780px; text-align: left; }
+    .btn { background-color: #2c7be5; color: white; border: none; padding: 10px 20px; margin: 10px 5px; cursor: pointer; border-radius: 8px; font-size: 14px; transition: background-color 0.3s ease; }
+    .btn:hover { background-color: #1a5fb4; }
+    .instructions, .result, .input-area, .bidders-info, .math-explanation { margin-top: 15px; font-size: 14px; }
+    .instructions { background-color: #eef3f9; padding: 12px; border-radius: 10px; }
+    .input-area input { width: 120px; padding: 6px; text-align: center; margin: 5px; border: 1px solid #bdc3c7; border-radius: 6px; }
+    .result { background-color: #d4edda; padding: 14px; border-radius: 10px; }
+    .bidders-info { background-color: #f8f9fa; padding: 12px; border-radius: 10px; }
+    .math-explanation { background-color: #fffbe6; padding: 14px; border-radius: 10px; font-size: 13px; color: #7d6608; }
+    .currency-info { font-size: 14px; background-color: #f1f3f5; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
+    footer { margin-top: 30px; font-size: 12px; text-align: center; color: #95a5a6; }
+  </style>
+</head>
+<body>
+  <marquee>
+    <img src="https://cmsredesign.channeli.in/library/assets/images/iitrLogo.png" alt="IIT Roorkee Logo" />
+  </marquee>
+
+  <h1>🎮 Interactive Auction Game - Understand Auction Types</h1>
+  <p style="text-align: center;">Choose an auction type, follow instructions, and experience how different bidding methods work. 🧠</p>
+
+  <div class="auction-type currency-info">
+    🛒 <strong>Item:</strong> Latest Laptop (Popular among students) <br>
+    💵 <strong>Market Value:</strong> ₹1.2 lakh <br>
+    💰 <strong>Bidding Range:</strong> ₹80,000 to ₹1.5 lakh <br>
+    👥 <strong>Total Bidders (including you):</strong> 4
+  </div>
+
+  <div class="auction-type">
+    <h3>1. First-Price Sealed-Bid Auction</h3>
+    <div class="instructions">
+      All bidders submit bids secretly. <strong>Highest bidder wins</strong> and pays their bid. <br>
+      ⚖️ Strategy: Balance between winning and not overpaying.
+    </div>
+    <div class="bidders-info" id="firstPriceBidders"></div>
+    <div class="input-area">
+      <label>Your bid (₹): <input type="number" id="firstPriceBid" min="80000" max="150000" value="120000"></label>
+      <button class="btn" onclick="playFirstPrice()">Submit Bid</button>
+    </div>
+    <div id="firstPriceResult" class="result" style="display:none;"></div>
+    <div class="math-explanation">
+      📐 <strong>Math Behind It:</strong> Bidders estimate competitors' valuations. The Nash equilibrium is achieved when bids are slightly less than their true valuation to avoid the winner's curse.
+    </div>
+  </div>
+
+  <div class="auction-type">
+    <h3>2. Second-Price (Vickrey) Auction</h3>
+    <div class="instructions">
+      Submit your bid. <strong>Highest bidder wins</strong> but pays the <strong>second-highest bid</strong>. <br>
+      📝 Best strategy: Bid your true valuation.
+    </div>
+    <div class="bidders-info" id="secondPriceBidders"></div>
+    <div class="input-area">
+      <label>Your bid (₹): <input type="number" id="secondPriceBid" min="80000" max="150000" value="120000"></label>
+      <button class="btn" onclick="playSecondPrice()">Submit Bid</button>
+    </div>
+    <div id="secondPriceResult" class="result" style="display:none;"></div>
+    <div class="math-explanation">
+      📐 <strong>Math Behind It:</strong> Truthful bidding is a dominant strategy since you pay the second-highest bid, reducing the incentive to underbid.
+    </div>
+  </div>
+
+  <div class="auction-type">
+    <h3>3. Dutch Auction</h3>
+    <div class="instructions">
+      Price starts high and drops every second. <strong>Click "Buy Now"</strong> to purchase. <br>
+      ⏳ Strategy: Wait for a lower price but risk someone else buying first.
+    </div>
+    <div class="bidders-info">4 bidders ready to buy when price seems right.</div>
+    <button class="btn" onclick="playDutchAuction()">Start Auction</button>
+    <div id="dutchPriceDisplay" class="result" style="display:none;"></div>
+    <div class="math-explanation">
+      📐 <strong>Math Behind It:</strong> Players solve an optimal stopping problem—deciding when to buy to maximize payoff.
+    </div>
+  </div>
+
+  <div class="auction-type">
+    <h3>4. English Auction</h3>
+    <div class="instructions">
+      Bidders raise bids sequentially. <strong>Highest bid wins</strong> when no one raises further. <br>
+      🔔 Participate actively or pass strategically.
+    </div>
+    <div class="bidders-info">👥 3 other bidders will compete with you in real-time bidding.</div>
+    <button class="btn" onclick="playEnglishAuction()">Start Auction</button>
+    <div id="englishPriceDisplay" class="result" style="display:none;"></div>
+    <div class="math-explanation">
+      📐 <strong>Math Behind It:</strong> The price typically stops near the second-highest valuation, reflecting market demand dynamics.
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Developed by Sahil Sharma | IIT Roorkee
+  </footer>
+
+  <script>
+    const marketValue = 120000;
+
+    function randomBidders(count = 3) {
+      return Array.from({ length: count }, (_, i) => ({
+        name: `Bidder ${String.fromCharCode(65 + i)}`,
+        bid: Math.floor(Math.random() * 70000) + 80000
+      }));
+    }
+
+    function displayBiddersInfo(elementId, bidders) {
+      const info = bidders.map(b => `🔹 ${b.name}: ₹${b.bid.toLocaleString()}`).join('<br>');
+      document.getElementById(elementId).innerHTML = `<strong>Bidders' Bids (revealed after submission):</strong><br>${info}`;
+    }
+
+    function displayResult(elementId, message) {
+      const el = document.getElementById(elementId);
+      el.style.display = 'block';
+      el.innerHTML = message;
+    }
+
+    function playFirstPrice() {
+      const playerBid = parseInt(document.getElementById('firstPriceBid').value);
+      const bidders = randomBidders();
+      bidders.push({ name: 'You', bid: playerBid });
+      displayBiddersInfo('firstPriceBidders', bidders);
+      bidders.sort((a, b) => b.bid - a.bid);
+      const winner = bidders[0];
+
+      displayResult('firstPriceResult', `
+        🏆 Winner: ${winner.name} with ₹${winner.bid.toLocaleString()}<br>
+        💰 Paid: ₹${winner.bid.toLocaleString()}<br>
+        ${winner.name === 'You' ? '✅ You won!' : '❌ You lost.'}<br>
+        📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - winner.bid).toLocaleString()}
+      `);
+    }
+
+    function playSecondPrice() {
+      const playerBid = parseInt(document.getElementById('secondPriceBid').value);
+      const bidders = randomBidders();
+      bidders.push({ name: 'You', bid: playerBid });
+      displayBiddersInfo('secondPriceBidders', bidders);
+      bidders.sort((a, b) => b.bid - a.bid);
+      const [winner, second] = bidders;
+
+      displayResult('secondPriceResult', `
+        🏆 Winner: ${winner.name} with ₹${winner.bid.toLocaleString()}<br>
+        💵 Pays: ₹${second.bid.toLocaleString()} (second-highest bid)<br>
+        ${winner.name === 'You' ? '✅ You won at a discounted price!' : '❌ You lost.'}<br>
+        📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - second.bid).toLocaleString()}
+      `);
+    }
+
+    function playDutchAuction() {
+      let price = 150000;
+      const acceptancePrice = Math.floor(Math.random() * 20000) + 100000;
+      const display = document.getElementById('dutchPriceDisplay');
+      display.style.display = 'block';
+
+      const interval = setInterval(() => {
+        display.innerHTML = `
+          💸 Current Price: ₹${price.toLocaleString()} <br>
+          <button class="btn" onclick="acceptDutch(${price})">Buy Now</button>
+        `;
+        price -= 5000;
+
+        if (price <= acceptancePrice) {
+          clearInterval(interval);
+          display.innerHTML = `✅ Another bidder bought at ₹${price.toLocaleString()}<br>📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - price).toLocaleString()}`;
+        }
+      }, 1000);
+
+      window.acceptDutch = (finalPrice) => {
+        clearInterval(interval);
+        display.innerHTML = `🎉 You bought it at ₹${finalPrice.toLocaleString()}!<br>📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - finalPrice).toLocaleString()}`;
+      };
+    }
+
+    function playEnglishAuction() {
+      let price = 80000;
+      const maxBid = Math.floor(Math.random() * 30000) + 120000;
+      const display = document.getElementById('englishPriceDisplay');
+      display.style.display = 'block';
+
+      const interval = setInterval(() => {
+        price += 5000;
+        display.innerHTML = `
+          💸 Current Bid: ₹${price.toLocaleString()}<br>
+          <button class="btn" onclick="acceptEnglish(${price})">Bid ₹${(price + 5000).toLocaleString()}</button>
+          <button class="btn" onclick="passEnglish(${price})">Pass</button>
+        `;
+
+        if (price >= maxBid) {
+          clearInterval(interval);
+          display.innerHTML = `🔔 Auction Ended. Winner: Bidder C at ₹${price.toLocaleString()}<br>📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - price).toLocaleString()}`;
+        }
+      }, 1500);
+
+      window.acceptEnglish = (currentBid) => {
+        clearInterval(interval);
+        display.innerHTML = `🎯 You placed the highest bid at ₹${(currentBid + 5000).toLocaleString()}!<br>📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - (currentBid + 5000)).toLocaleString()}`;
+      };
+
+      window.passEnglish = (finalBid) => {
+        clearInterval(interval);
+        display.innerHTML = `🚫 You passed. Bidder B won at ₹${finalBid.toLocaleString()}<br>📊 Market Value: ₹${marketValue.toLocaleString()} | Difference: ₹${Math.abs(marketValue - finalBid).toLocaleString()}`;
+      };
+    }
+  </script>
+</body>
+</html>
